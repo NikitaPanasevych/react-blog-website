@@ -4,6 +4,8 @@ import Button from '@mui/material/Button';
 import Post from './components/Post';
 import { TextField } from '@mui/material';
 import {useState} from "react"
+import { motion, AnimatePresence } from 'framer-motion';
+import { pink } from '@mui/material/colors';
 
 
 function App() {
@@ -46,10 +48,16 @@ function App() {
   }
 
   return (
-    <div className="App w-screen h-screen grid bg-[#3330E4]">
+    <div className="App w-screen h-screen grid bg-[#f3d2c1]">
       <Navbar />
-      {isExpanded ? 
-      <div className="createPostField w-[700px] min-h-[500px] max-h-[500px] m-auto mt-[40px] pt-8 mb-10 rounded-xl bg-white">
+      <AnimatePresence>
+      {isExpanded && 
+      (<motion.div 
+      initial={{opacity:0, y:-20}}
+      animate={{opacity:1, y:0}}
+      exit={{opacity:0, y:-20}}
+      transition={{duration:1, delay:1, ease:"easeInOut"}}
+      className="createPostField w-[40em] h-[18em]  m-auto mt-[30px] pt-8 mb-10 rounded-xl bg-[#fef6e4] border-2 border-[#001858]">
             <TextField name='title' value={postContent.title} onChange={handleChange} id="standard-basic" className="w-3/4 h-16" label="Title" variant="standard" />
             <TextField
           name='text'
@@ -62,14 +70,22 @@ function App() {
           maxRows={10}
           variant="standard"
         />
-        <p className='pt-10'><Button onClick={handlePostCreation} className='w-1/3' variant="contained">Post</Button></p>
-        </div>
-      :
-      <div className="createPostField w-[700px] m-auto mt-[8px] pb-10 pt-10 rounded-xl bg-white"> 
-      <Button onClick={handleExpansion} variant="contained">Start Writing</Button>
-      </div>
-      }
-      <div className='w-[90vw] flex flex-wrap m-auto'>
+        <p className='pt-10'><Button sx={{color: pink[500]}} onClick={handlePostCreation} className='w-1/3 ' variant="outlined"><strong>Post</strong></Button></p>
+        </motion.div>)}
+      </AnimatePresence>
+      <AnimatePresence>
+      {!isExpanded &&
+      <motion.div
+      initial={{opacity:0, y:-20}}
+      animate={{opacity:1, y:0}}
+      exit={{opacity:0, y:-20}}
+      transition={{duration:1, ease:"easeInOut"}}
+      className="absolute w-[30em] top-[40%] left-[37%] pb-10 pt-10 rounded-xl bg-white"> 
+        <Button onClick={handleExpansion} variant="contained">Start Writing</Button>
+      </motion.div>}
+      </AnimatePresence>
+      
+      <div className='w-[90vw] flex flex-wrap mt-10 m-auto'>
         {postContentArray.map((postContentItem, index)=>{
           return(
             <Post 
